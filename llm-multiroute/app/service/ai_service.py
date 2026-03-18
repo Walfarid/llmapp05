@@ -19,27 +19,27 @@ class AIService:
         router: Optional[ModelRouter] = None,
     ):
         self.http_client = http_client or httpx.Client(timeout=120.0)
-        self.base_url = settings.OLLAMA_BASE_URL
-        self.temperature = settings.OLLAMA_TEMPERATURE
-        self.api_key = settings.OLLAMA_API_KEY
+        self.base_url = settings.OPENAI_BASE_URL
+        self.temperature = settings.OPENAI_TEMPERATURE
+        self.api_key = settings.OPENAI_API_KEY
         self.router = router or model_router
 
     def _chat(self, prompt: str, model: str) -> str:
-        headers = {}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
         response = self.http_client.post(
-            f"{self.base_url}/api/chat",
+            f"{self.base_url}/chat/completions",
             headers=headers,
             json={
                 "model": model,
                 "messages": [{"role": "user", "content": prompt}],
-                "stream": False,
                 "temperature": self.temperature,
             },
         )
         response.raise_for_status()
-        return response.json()["message"]["content"]
+        return response.json()["choices"][0]["message"]["content"]
 
     def classify_text(self, text: str) -> ClassificationResponse:
         model = self.router.get_model(TaskType.CLASSIFY)

@@ -13,10 +13,10 @@ class TaskType(str, Enum):
 class ModelRouter:
     def __init__(self):
         self._route_map: dict[TaskType, str] = {
-            TaskType.CLASSIFY: settings.OLLAMA_MODEL_CLASSIFY,
-            TaskType.SENTIMENT: settings.OLLAMA_MODEL_SENTIMENT,
-            TaskType.SUMMARIZE: settings.OLLAMA_MODEL_SUMMARIZE,
-            TaskType.INTENT: settings.OLLAMA_MODEL_INTENT,
+            TaskType.CLASSIFY: settings.OPENAI_MODEL_CLASSIFY,
+            TaskType.SENTIMENT: settings.OPENAI_MODEL_SENTIMENT,
+            TaskType.SUMMARIZE: settings.OPENAI_MODEL_SUMMARIZE,
+            TaskType.INTENT: settings.OPENAI_MODEL_INTENT,
         }
 
     def get_model(self, task_type: TaskType) -> str:
