@@ -16,8 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
-  OLLAMA_BASE_URL: ${{ secrets.OLLAMA_BASE_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   promptfoo-eval:
