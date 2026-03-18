@@ -5,13 +5,13 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - OLLAMA_API_KEY=${OLLAMA_API_KEY}
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-https://ollama.com}
-      - OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE:-0.7}
-      - OLLAMA_MODEL_CLASSIFY=${OLLAMA_MODEL_CLASSIFY:-gemma3:4b}
-      - OLLAMA_MODEL_SENTIMENT=${OLLAMA_MODEL_SENTIMENT:-ministral-3:3b}
-      - OLLAMA_MODEL_SUMMARIZE=${OLLAMA_MODEL_SUMMARIZE:-ministral-3:8b}
-      - OLLAMA_MODEL_INTENT=${OLLAMA_MODEL_INTENT:-gemma3:12b}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://openrouter.ai/api/v1}
+      - OPENAI_TEMPERATURE=${OPENAI_TEMPERATURE:-0.7}
+      - OPENAI_MODEL_CLASSIFY=${OPENAI_MODEL_CLASSIFY:-stepfun/step-3.5-flash:free}
+      - OPENAI_MODEL_SENTIMENT=${OPENAI_MODEL_SENTIMENT:-z-ai/glm-4.5-air:free}
+      - OPENAI_MODEL_SUMMARIZE=${OPENAI_MODEL_SUMMARIZE:-nvidia/nemotron-3-super-120b-a12b:free}
+      - OPENAI_MODEL_INTENT=${OPENAI_MODEL_INTENT:-arcee-ai/trinity-large-preview:free}
       - SERVER_PORT=8080
     networks:
       - llm-network
