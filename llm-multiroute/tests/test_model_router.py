@@ -9,22 +9,22 @@ class TestModelRouter:
     def test_get_model_classify(self):
         router = ModelRouter()
         model = router.get_model(TaskType.CLASSIFY)
-        assert model == "gemma3:4b"
+        assert model == "stepfun/step-3.5-flash:free"
 
     def test_get_model_sentiment(self):
         router = ModelRouter()
         model = router.get_model(TaskType.SENTIMENT)
-        assert model == "ministral-3:3b"
+        assert model == "z-ai/glm-4.5-air:free"
 
     def test_get_model_summarize(self):
         router = ModelRouter()
         model = router.get_model(TaskType.SUMMARIZE)
-        assert model == "ministral-3:8b"
+        assert model == "nvidia/nemotron-3-super-120b-a12b:free"
 
     def test_get_model_intent(self):
         router = ModelRouter()
         model = router.get_model(TaskType.INTENT)
-        assert model == "gemma3:12b"
+        assert model == "arcee-ai/trinity-large-preview:free"
 
     def test_get_routes_returns_all_tasks(self):
         router = ModelRouter()
@@ -38,10 +38,10 @@ class TestModelRouter:
     def test_get_routes_returns_correct_models(self):
         router = ModelRouter()
         routes = router.get_routes()
-        assert routes["classify"] == "gemma3:4b"
-        assert routes["sentiment"] == "ministral-3:3b"
-        assert routes["summarize"] == "ministral-3:8b"
-        assert routes["intent"] == "gemma3:12b"
+        assert routes["classify"] == "stepfun/step-3.5-flash:free"
+        assert routes["sentiment"] == "z-ai/glm-4.5-air:free"
+        assert routes["summarize"] == "nvidia/nemotron-3-super-120b-a12b:free"
+        assert routes["intent"] == "arcee-ai/trinity-large-preview:free"
 
     def test_each_task_has_unique_model(self):
         router = ModelRouter()
@@ -53,10 +53,10 @@ class TestModelRouter:
 class TestModelRouterCustomConfig:
     @patch("app.router.model_router.settings")
     def test_custom_model_assignments(self, mock_settings):
-        mock_settings.OLLAMA_MODEL_CLASSIFY = "custom-classify"
-        mock_settings.OLLAMA_MODEL_SENTIMENT = "custom-sentiment"
-        mock_settings.OLLAMA_MODEL_SUMMARIZE = "custom-summarize"
-        mock_settings.OLLAMA_MODEL_INTENT = "custom-intent"
+        mock_settings.OPENAI_MODEL_CLASSIFY = "custom-classify"
+        mock_settings.OPENAI_MODEL_SENTIMENT = "custom-sentiment"
+        mock_settings.OPENAI_MODEL_SUMMARIZE = "custom-summarize"
+        mock_settings.OPENAI_MODEL_INTENT = "custom-intent"
 
         router = ModelRouter()
 
@@ -67,10 +67,10 @@ class TestModelRouterCustomConfig:
 
     @patch("app.router.model_router.settings")
     def test_custom_routes_dict(self, mock_settings):
-        mock_settings.OLLAMA_MODEL_CLASSIFY = "model-a"
-        mock_settings.OLLAMA_MODEL_SENTIMENT = "model-b"
-        mock_settings.OLLAMA_MODEL_SUMMARIZE = "model-c"
-        mock_settings.OLLAMA_MODEL_INTENT = "model-d"
+        mock_settings.OPENAI_MODEL_CLASSIFY = "model-a"
+        mock_settings.OPENAI_MODEL_SENTIMENT = "model-b"
+        mock_settings.OPENAI_MODEL_SUMMARIZE = "model-c"
+        mock_settings.OPENAI_MODEL_INTENT = "model-d"
 
         router = ModelRouter()
         routes = router.get_routes()

@@ -258,10 +258,10 @@ class TestRoutesEndpoint:
 
         assert response.status_code == 200
         data = response.json()
-        assert data["classify"] == "gemma3:4b"
-        assert data["sentiment"] == "ministral-3:3b"
-        assert data["summarize"] == "ministral-3:8b"
-        assert data["intent"] == "gemma3:12b"
+        assert data["classify"] == "stepfun/step-3.5-flash:free"
+        assert data["sentiment"] == "z-ai/glm-4.5-air:free"
+        assert data["summarize"] == "nvidia/nemotron-3-super-120b-a12b:free"
+        assert data["intent"] == "arcee-ai/trinity-large-preview:free"
 
 
 class TestRequestValidation:

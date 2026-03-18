@@ -15,10 +15,10 @@ def mock_http_client():
 def mock_router():
     router = MagicMock(spec=ModelRouter)
     router.get_model.side_effect = lambda t: {
-        TaskType.CLASSIFY: "gemma3:4b",
-        TaskType.SENTIMENT: "ministral-3:3b",
-        TaskType.SUMMARIZE: "ministral-3:8b",
-        TaskType.INTENT: "gemma3:12b",
+        TaskType.CLASSIFY: "stepfun/step-3.5-flash:free",
+        TaskType.SENTIMENT: "z-ai/glm-4.5-air:free",
+        TaskType.SUMMARIZE: "nvidia/nemotron-3-super-120b-a12b:free",
+        TaskType.INTENT: "arcee-ai/trinity-large-preview:free",
     }[t]
     return router
 
@@ -30,7 +30,7 @@ def ai_service(mock_http_client, mock_router):
 
 def _setup_chat_response(mock_http_client, response_text: str):
     mock_response = MagicMock()
-    mock_response.json.return_value = {"message": {"content": response_text}}
+    mock_response.json.return_value = {"choices": [{"message": {"content": response_text}}]}
     mock_response.raise_for_status = MagicMock()
     mock_http_client.post.return_value = mock_response
 
@@ -55,7 +55,7 @@ class TestClassifyText:
 
         call_args = mock_http_client.post.call_args
         body = call_args.kwargs.get("json") or call_args[1].get("json")
-        assert body["model"] == "gemma3:4b"
+        assert body["model"] == "stepfun/step-3.5-flash:free"
 
     def test_markdown_json_code_block(self, ai_service, mock_http_client):
         json_response = '```json\n{"labels": ["news"], "primaryCategory": "news", "confidence": 0.8}\n```'
@@ -112,7 +112,7 @@ class TestAnalyzeSentiment:
 
         call_args = mock_http_client.post.call_args
         body = call_args.kwargs.get("json") or call_args[1].get("json")
-        assert body["model"] == "ministral-3:3b"
+        assert body["model"] == "z-ai/glm-4.5-air:free"
 
     def test_negative_sentiment(self, ai_service, mock_http_client):
         json_response = '{"overallSentiment": "negative", "sentimentScore": -0.75, "emotions": ["anger", "disappointment"], "confidence": 0.88}'
@@ -163,7 +163,7 @@ class TestSummarizeText:
 
         call_args = mock_http_client.post.call_args
         body = call_args.kwargs.get("json") or call_args[1].get("json")
-        assert body["model"] == "ministral-3:8b"
+        assert body["model"] == "nvidia/nemotron-3-super-120b-a12b:free"
 
     def test_single_key_point(self, ai_service, mock_http_client):
         json_response = '{"summary": "Brief summary.", "keyPoints": ["Main point"], "wordCount": 2}'
@@ -210,7 +210,7 @@ class TestDetectIntent:
 
         call_args = mock_http_client.post.call_args
         body = call_args.kwargs.get("json") or call_args[1].get("json")
-        assert body["model"] == "gemma3:12b"
+        assert body["model"] == "arcee-ai/trinity-large-preview:free"
 
     def test_command_intent(self, ai_service, mock_http_client):
         json_response = '{"primaryIntent": "turn_off_lights", "secondaryIntents": ["smart_home"], "intentCategory": "command", "confidence": 0.95}'
@@ -261,7 +261,7 @@ class TestAuthorizationHeader:
         headers = call_args.kwargs.get("headers") or call_args[1].get("headers")
         assert headers["Authorization"] == "Bearer test-api-key"
 
-    def test_no_api_key_sends_no_auth_header(self, mock_http_client):
+    def test_api_key_always_sends_header(self, mock_http_client):
         json_response = '{"labels": ["test"], "primaryCategory": "test", "confidence": 0.9}'
         _setup_chat_response(mock_http_client, json_response)
 
@@ -271,7 +271,8 @@ class TestAuthorizationHeader:
 
         call_args = mock_http_client.post.call_args
         headers = call_args.kwargs.get("headers") or call_args[1].get("headers")
-        assert "Authorization" not in headers
+        assert "Authorization" in headers
+        assert headers["Authorization"] == "Bearer "
 
 
 class TestModelRoutingIntegration:
@@ -279,10 +280,10 @@ class TestModelRoutingIntegration:
         service = AIService(http_client=mock_http_client, router=mock_router)
 
         tasks_and_models = [
-            (lambda: service.classify_text("text"), "gemma3:4b"),
-            (lambda: service.analyze_sentiment("text"), "ministral-3:3b"),
-            (lambda: service.summarize_text("text"), "ministral-3:8b"),
-            (lambda: service.detect_intent("text"), "gemma3:12b"),
+            (lambda: service.classify_text("text"), "stepfun/step-3.5-flash:free"),
+            (lambda: service.analyze_sentiment("text"), "z-ai/glm-4.5-air:free"),
+            (lambda: service.summarize_text("text"), "nvidia/nemotron-3-super-120b-a12b:free"),
+            (lambda: service.detect_intent("text"), "arcee-ai/trinity-large-preview:free"),
         ]
 
         responses = [
