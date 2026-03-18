@@ -54,19 +54,19 @@ jobs:
 
       - name: Run PromptFoo classify evaluation
         working-directory: promptfoo-tests
-        run: npx promptfoo@latest eval -c classify.yaml
+        run: npx promptfoo@0.120.27 eval -c classify.yaml
 
       - name: Run PromptFoo sentiment evaluation
         working-directory: promptfoo-tests
-        run: npx promptfoo@latest eval -c sentiment.yaml
+        run: npx promptfoo@0.120.27 eval -c sentiment.yaml
 
       - name: Run PromptFoo summarize evaluation
         working-directory: promptfoo-tests
-        run: npx promptfoo@latest eval -c summarize.yaml
+        run: npx promptfoo@0.120.27 eval -c summarize.yaml
 
       - name: Run PromptFoo intent evaluation
         working-directory: promptfoo-tests
-        run: npx promptfoo@latest eval -c intent.yaml
+        run: npx promptfoo@0.120.27 eval -c intent.yaml
 
       - name: Tear down backend
         if: always()
