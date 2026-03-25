@@ -17,6 +17,7 @@ on:
 
 env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPENAI_BASE_URL: https://openrouter.ai/api/v1
 
 jobs:
   promptfoo-eval:
